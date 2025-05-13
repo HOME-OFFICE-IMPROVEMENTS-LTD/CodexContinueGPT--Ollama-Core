@@ -21,7 +21,7 @@ persist_path = "pilot/data"
 # Model Configurations
 [models]
 [[models.llms]]
-name = "deepseek-r1:1.5b"
+name = "codellama"
 provider = "proxy/ollama"
 api_base = "http://localhost:11434"
 api_key = ""
