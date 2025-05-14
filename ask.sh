@@ -1,0 +1,1 @@
+/home/msalsouri/Projects/DB-GPT/tools/ollama/ask.sh

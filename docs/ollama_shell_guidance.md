@@ -1,54 +1,159 @@
-# Using Ollama with DB-GPT for Shell Guidance
+# Using Ollama with CodexContinueGPT™ for Shell Guidance
 
-This guide explains how to effectively use Ollama models with DB-GPT for shell command guidance and other tasks.
+This guide explains how to effectively use Ollama models with CodexContinueGPT™ for shell command guidance, code generation, and other development tasks.
+
+## Quick Start with Helper Scripts
+
+CodexContinueGPT™ provides convenient helper scripts to interact with Ollama models directly from your terminal:
+
+```bash
+# Load the aliases first
+source .aliases
+
+# Get shell command help
+sh-help "How to find large files in my system?"
+
+# Get an explanation of a complex command
+sh-explain "find / -type f -size +100M -exec ls -lh {} \;"
+
+# Generate a shell script
+sh-script "backup all MySQL databases and compress them"
+
+# Direct query to codellama model
+ask "How do I set up git hooks for a project?"
+
+# Query specific models
+ask-llama "What's the difference between Linux and Unix?"
+ask-code "Write a Python function to download files asynchronously"
+```
 
 ## Configuration Setup
 
-Your DB-GPT is already configured to use Ollama models through the proxy configuration file at:
+CodexContinueGPT™ is configured to use Ollama models through the proxy configuration file at:
 ```
-/home/msalsouri/Projects/DB-GPT/configs/dbgpt-proxy-ollama.toml
+configs/dbgpt-proxy-ollama.toml
 ```
 
 The current configuration uses:
 - LLM model: `codellama` (excellent for coding and shell commands)
-- Embedding model: `bge-m3:latest`
-- API connection: `http://localhost:11434`
+- Embedding model: `bge-m3:latest` 
+- API connection: `http://localhost:11434` (local Ollama server)
 
-## Starting DB-GPT with Ollama Integration
+## Ollama Model Management
 
-### Method 1: Direct Command
-
-To start DB-GPT with the Ollama configuration:
+CodexContinueGPT™ includes a powerful Ollama model management script (`ollama_manager.sh`) that simplifies working with models. Access it through convenient aliases:
 
 ```bash
-cd /home/msalsouri/Projects/DB-GPT
+# Load the aliases first
+source .aliases
+
+# List all available Ollama models
+om-list
+
+# Pull a new model
+om-pull codellama
+
+# Update the configuration to use a different model
+om-update mistral
+
+# Get model recommendations for different tasks
+om-recommend
+
+# Start CodexContinueGPT™ with Ollama configuration
+om-start
+
+# Deploy with Docker
+om-docker
+```
+
+## Shell Helper Script
+
+The shell helper script provides AI-powered assistance for shell commands and scripts:
+
+```bash
+# Basic usage
+./tools/ollama/shell_helper.sh "How do I compress a directory in Linux?"
+
+# Get explanation of a complex command
+./tools/ollama/shell_helper.sh --explain "awk '{print $1}' file.txt | sort | uniq -c"
+
+# Generate a shell script based on natural language description
+./tools/ollama/shell_helper.sh --script "Create a backup script that runs every night at 2am"
+```
+
+## Starting CodexContinueGPT™ Web Interface
+
+To access the full capabilities through a web interface:
+
+```bash
+# Using direct command
+cd $(git rev-parse --show-toplevel)
 uv run dbgpt start webserver --config configs/dbgpt-proxy-ollama.toml
+
+# Or use the convenient alias
+om-start
 ```
 
-Once started, you can access the DB-GPT web interface at: `http://localhost:5670`
+Once started, you can access the web interface at: `http://localhost:5670`
 
-### Method 2: Docker-Compose Deployment
+## Recommended Models for Different Tasks
 
-You can also run DB-GPT using Docker-Compose:
+CodexContinueGPT™ works best with certain models for specific tasks:
+
+| Task | Recommended Model | Pull Command |
+|------|------------------|--------------|
+| Shell Commands | `codellama` | `ollama pull codellama` |
+| General Coding | `codellama` | `ollama pull codellama` |
+| Python Coding | `codellama` or `wizardcoder` | `ollama pull wizardcoder` |
+| General Q&A | `llama3` | `ollama pull llama3` |
+| SQL Generation | `sqlcoder` | `ollama pull sqlcoder` |
+
+You can get updated recommendations by running:
+```bash
+om-recommend
+```
+
+## Troubleshooting
+
+### Ollama Server Not Running
+
+If you see an error about connecting to the Ollama server:
+
+```
+Error: ollama server doesn't seem to be running
+```
+
+Start the Ollama server with:
+```bash
+ollama serve
+```
+
+### Model Not Found
+
+If you get a "model not found" error:
+
+```
+Error: model 'codellama' not found
+```
+
+Pull the model using:
+```bash
+ollama pull codellama
+```
+Or use the helper:
+```bash
+om-pull codellama
+```
+
+### Path Issues
+
+If you encounter path-related errors when running scripts, use the fix_paths.sh script:
 
 ```bash
-# This example requires you provide a valid API key for the SiliconFlow API
-# You can obtain one by signing up at SiliconFlow and creating an API key
-SILICONFLOW_API_KEY=your_siliconflow_api_key docker compose up -d
+./tools/ollama/fix_paths.sh
 ```
 
-You will see the following output if the deployment is successful:
-```
-[+] Running 3/3
- ✔ Network dbgptnet              Created                                            0.0s 
- ✔ Container db-gpt-db-1         Started                                            0.2s 
- ✔ Container db-gpt-webserver-1  Started                                            0.2s 
-```
-
-To view logs:
-```bash
-docker logs db-gpt-webserver-1 -f
-```
+This will update any hardcoded paths in the scripts to use dynamic path resolution.
 
 For more configuration details, you can examine the `docker-compose.yml` file.
 

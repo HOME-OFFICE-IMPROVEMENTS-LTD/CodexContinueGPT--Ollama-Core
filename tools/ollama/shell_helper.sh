@@ -1,5 +1,5 @@
 #!/bin/bash
-# CodexContinueGPT™ Shell Helper Script
+# DB-GPT Shell Helper Script
 # Uses Ollama with CodeLlama for powerful shell guidance
 
 # Set the model to use
@@ -13,7 +13,7 @@ NC='\033[0m' # No Color
 
 # Help function
 show_help() {
-    echo -e "${GREEN}CodexContinueGPT™ Shell Helper${NC}"
+    echo -e "${GREEN}DB-GPT Shell Helper${NC}"
     echo -e "${CYAN}Usage:${NC}"
     echo -e "  ./shell_helper.sh \"<your shell question or task>\""
     echo -e "  ./shell_helper.sh --explain \"<shell command>\""

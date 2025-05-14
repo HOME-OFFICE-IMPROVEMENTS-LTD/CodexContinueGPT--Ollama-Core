@@ -1,6 +1,6 @@
 #!/bin/bash
-# CodexContinueGPT™ Ollama Model Manager
-# This script helps manage Ollama models for CodexContinueGPT™ integration
+# DB-GPT Ollama Model Manager
+# This script helps manage Ollama models for DB-GPT integration
 
 # Colors for better readability
 GREEN='\033[0;32m'
@@ -10,9 +10,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Paths and settings
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-REPO_ROOT="$( cd "$SCRIPT_DIR/../.." && pwd )"
-CONFIG_DIR="$REPO_ROOT/configs"
+CONFIG_DIR="/home/msalsouri/Projects/DB-GPT/configs"
 OLLAMA_CONFIG_FILE="$CONFIG_DIR/dbgpt-proxy-ollama.toml"
 
 # Check if Ollama is installed
@@ -98,7 +96,7 @@ show_recommended_models() {
 
 # Start DB-GPT with Ollama configuration
 start_dbgpt() {
-    cd "$SCRIPT_DIR"
+    cd /home/msalsouri/Projects/DB-GPT
     echo -e "${CYAN}Starting DB-GPT with Ollama configuration...${NC}"
     echo -e "${YELLOW}DB-GPT will be available at http://localhost:5670${NC}"
     uv run dbgpt start webserver --config configs/dbgpt-proxy-ollama.toml
@@ -106,7 +104,7 @@ start_dbgpt() {
 
 # Deploy with Docker-Compose
 deploy_docker() {
-    cd "$SCRIPT_DIR"
+    cd /home/msalsouri/Projects/DB-GPT
     echo -e "${CYAN}Deploying DB-GPT using Docker-Compose...${NC}"
     echo -e "${YELLOW}Please set your SiliconFlow API key in the environment${NC}"
     echo -e "${YELLOW}DB-GPT will be available at http://localhost:5670${NC}"
