@@ -1,0 +1,17 @@
+# This docker-compose file is used to run the DeepSeek model with the dbgpt proxy.
+# It uses the eosphorosai/dbgpt image and exposes port 5000.
+# The DeepSeek API key is passed as an environment variable.
+# The configs, models, pilot/data, and pilot/meta_data directories are mounted as volumes.
+services:
+  dbgpt:
+    image: eosphorosai/dbgpt:latest
+    ports:
+      - "5671:5670"  # Map container's 5670 port to host's 5671
+    environment:
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+    volumes:
+      - ./configs:/app/configs
+      - ./models:/app/models
+      - ./pilot/data:/app/pilot/data
+      - ./pilot/meta_data:/app/pilot/meta_data
+    command: ["dbgpt", "start", "webserver", "--config", "configs/dbgpt-proxy-deepseek.toml"]
