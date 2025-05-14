@@ -1,0 +1,49 @@
+#!/bin/bash
+# CodexContinueGPT Aliases
+# Source this file to load project-specific aliases
+# Usage: source .aliases
+
+# Git aliases
+alias gs='git status'
+alias gco='git checkout'
+alias gcb='git checkout -b'
+alias gp='git pull'
+alias gpu='git push'
+alias gf='git fetch'
+alias gl='git log --oneline --graph --decorate --all'
+alias glo='git log --oneline --decorate'
+alias grs='git remote -v'
+
+# Ollama Manager aliases
+alias om='./tools/ollama/ollama_manager.sh'
+alias om-list='./tools/ollama/ollama_manager.sh list'
+alias om-pull='./tools/ollama/ollama_manager.sh pull'
+alias om-update='./tools/ollama/ollama_manager.sh update'
+alias om-start='./tools/ollama/ollama_manager.sh start'
+alias om-docker='./tools/ollama/ollama_manager.sh docker'
+alias om-recommend='./tools/ollama/ollama_manager.sh recommend'
+
+# Direct Ollama model query aliases
+alias ask='function _ask() { ollama run codellama "$1"; }; _ask'
+alias ask-llama='function _ask_llama() { ollama run llama3 "$1"; }; _ask_llama'
+alias ask-code='function _ask_code() { ollama run codellama "$1"; }; _ask_code'
+alias ask-any='function _ask_any() { if [ -z "$1" ] || [ -z "$2" ]; then echo "Usage: ask-any MODEL_NAME \"your question\""; else ollama run "$1" "$2"; fi; }; _ask_any'
+
+# Advanced ask script aliases
+alias askm='./tools/ollama/ask.sh'
+alias ask-models='./tools/ollama/ask.sh --list'
+
+# Shell Helper aliases
+alias sh-help='./tools/ollama/shell_helper.sh'
+alias sh-explain='./tools/ollama/shell_helper.sh --explain'
+alias sh-script='./tools/ollama/shell_helper.sh --script'
+
+# Quick project navigation for CodexContinueGPT
+alias cdcc='cd $(git rev-parse --show-toplevel)' # Navigate to repository root
+alias cdcc-docs='cd $(git rev-parse --show-toplevel)/docs'
+alias cdcc-configs='cd $(git rev-parse --show-toplevel)/configs'
+
+# Print available aliases
+alias cchelp='cat $(git rev-parse --show-toplevel)/.aliases | grep -E "^alias" | sed "s/alias //g" | sort'
+
+echo "CodexContinueGPT aliases loaded! Type 'cchelp' to see all available commands."
