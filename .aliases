@@ -103,13 +103,13 @@ alias mcp-test="$PROJECT_ROOT/tools/ollama/test_enhanced_mcp_server.py"
 alias mcp-benchmark="$PROJECT_ROOT/tools/ollama/benchmark_mcp_server.sh"
 
 # Enhanced Shell Agent aliases
-alias enhanced-shell="$PROJECT_ROOT/enhanced-shell-agent.sh"
-alias enhanced-shell-code="$PROJECT_ROOT/enhanced-shell-agent.sh --mode code"
-alias enhanced-shell-creative="$PROJECT_ROOT/enhanced-shell-agent.sh --mode creative"
-alias mcp-memory-agent="$PROJECT_ROOT/mcp-memory-agent.sh"
-alias mcp-memory-start="$PROJECT_ROOT/mcp-memory-agent.sh start"
-alias mcp-memory-ask="$PROJECT_ROOT/mcp-memory-agent.sh ask"
-alias mcp-memory-remember="$PROJECT_ROOT/mcp-memory-agent.sh remember"
+alias shell-enhanced="$PROJECT_ROOT/tools/ollama/enhanced_shell_agent.sh"
+alias shell-enhanced-code="$PROJECT_ROOT/tools/ollama/enhanced_shell_agent.sh --mode code"
+alias shell-enhanced-creative="$PROJECT_ROOT/tools/ollama/enhanced_shell_agent.sh --mode creative"
+alias mcp-memory="$PROJECT_ROOT/tools/ollama/mcp_memory_agent.sh"
+alias mcp-memory-start="$PROJECT_ROOT/tools/ollama/mcp_memory_agent.sh start"
+alias mcp-memory-ask="$PROJECT_ROOT/tools/ollama/mcp_memory_agent.sh ask"
+alias mcp-memory-remember="$PROJECT_ROOT/tools/ollama/mcp_memory_agent.sh remember"
 
 # Agent Memory System aliases
 alias agent-memory="$PROJECT_ROOT/agent-memory.sh"

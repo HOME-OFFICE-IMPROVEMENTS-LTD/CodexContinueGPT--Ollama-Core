@@ -54,14 +54,14 @@ The `.aliases` file has been updated to fix several issues:
 - `mcp-enhanced` - Start enhanced MCP server with default settings
 - `mcp-enhanced-codellama` - Start enhanced MCP server with codellama
 - `mcp-enhanced-llama3` - Start enhanced MCP server with llama3
-- `mcp-test` - Test the enhanced MCP server functionality
-- `mcp-benchmark` - Benchmark models through the enhanced MCP server
+- `mcp-test` - Test the enhanced MCP server
+- `mcp-benchmark` - Benchmark models via enhanced MCP server
 
 ### Enhanced Shell Agent
-- `enhanced-shell` - Start enhanced shell agent with streaming
-- `enhanced-shell-code` - Start enhanced shell agent in code mode
-- `enhanced-shell-creative` - Start enhanced shell agent in creative mode
-- `mcp-memory-agent` - Use MCP memory agent with full options
+- `shell-enhanced` - Start enhanced shell agent with streaming support
+- `shell-enhanced-code` - Start enhanced shell agent in code mode
+- `shell-enhanced-creative` - Start enhanced shell agent in creative mode
+- `mcp-memory` - Use MCP memory agent with full options
 - `mcp-memory-start` - Start interactive MCP memory agent
 - `mcp-memory-ask` - Ask a question with memory context
 - `mcp-memory-remember` - Store new information in memory
