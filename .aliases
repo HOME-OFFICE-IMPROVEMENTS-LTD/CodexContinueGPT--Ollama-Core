@@ -3,6 +3,9 @@
 # Source this file to load project-specific aliases
 # Usage: source .aliases
 
+# Define the project root dynamically
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Git aliases
 alias gs='git status'
 alias gco='git checkout'
@@ -14,36 +17,140 @@ alias gl='git log --oneline --graph --decorate --all'
 alias glo='git log --oneline --decorate'
 alias grs='git remote -v'
 
-# Ollama Manager aliases
-alias om='./tools/ollama/ollama_manager.sh'
-alias om-list='./tools/ollama/ollama_manager.sh list'
-alias om-pull='./tools/ollama/ollama_manager.sh pull'
-alias om-update='./tools/ollama/ollama_manager.sh update'
-alias om-start='./tools/ollama/ollama_manager.sh start'
-alias om-docker='./tools/ollama/ollama_manager.sh docker'
-alias om-recommend='./tools/ollama/ollama_manager.sh recommend'
+# Ollama Manager aliases - using absolute paths
+alias om="$PROJECT_ROOT/tools/ollama/ollama_manager.sh"
+alias om-list="$PROJECT_ROOT/tools/ollama/ollama_manager.sh list"
+alias om-pull="$PROJECT_ROOT/tools/ollama/ollama_manager.sh pull"
+alias om-update="$PROJECT_ROOT/tools/ollama/ollama_manager.sh update"
+alias om-start="$PROJECT_ROOT/tools/ollama/ollama_manager.sh start"
+alias om-docker="$PROJECT_ROOT/tools/ollama/ollama_manager.sh docker"
+alias om-recommend="$PROJECT_ROOT/tools/ollama/ollama_manager.sh recommend"
 
-# Direct Ollama model query aliases
-alias ask='function _ask() { ollama run codellama "$1"; }; _ask'
-alias ask-llama='function _ask_llama() { ollama run llama3 "$1"; }; _ask_llama'
-alias ask-code='function _ask_code() { ollama run codellama "$1"; }; _ask_code'
-alias ask-any='function _ask_any() { if [ -z "$1" ] || [ -z "$2" ]; then echo "Usage: ask-any MODEL_NAME \"your question\""; else ollama run "$1" "$2"; fi; }; _ask_any'
+# Ollama convenience aliases
+alias ollama-help="$PROJECT_ROOT/ollama-commands.sh"
+alias ollama-start="$PROJECT_ROOT/ollama-docker-start.sh"
+
+# Direct Ollama model query functions (better than function-based aliases)
+ask() {
+  ollama run codellama "$*"
+}
+
+ask-llama() {
+  ollama run llama3 "$*"
+}
+
+ask-code() {
+  ollama run codellama "$*"
+}
+
+ask-any() {
+  if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Usage: ask-any MODEL_NAME \"your question\""
+    return 1
+  fi
+  local model="$1"
+  shift
+  ollama run "$model" "$*"
+}
 
 # Advanced ask script aliases
-alias askm='./tools/ollama/ask.sh'
-alias ask-models='./tools/ollama/ask.sh --list'
+alias askm="$PROJECT_ROOT/tools/ollama/ask.sh"
+alias ask-models="$PROJECT_ROOT/tools/ollama/ask.sh --list"
 
 # Shell Helper aliases
-alias sh-help='./tools/ollama/shell_helper.sh'
-alias sh-explain='./tools/ollama/shell_helper.sh --explain'
-alias sh-script='./tools/ollama/shell_helper.sh --script'
+alias sh-help="$PROJECT_ROOT/tools/ollama/shell_helper.sh"
+
+# Shell helper functions for better argument handling
+sh-explain() {
+  "$PROJECT_ROOT/tools/ollama/shell_helper.sh" --explain "$*"
+}
+
+sh-script() {
+  "$PROJECT_ROOT/tools/ollama/shell_helper.sh" --script "$*"
+}
+
+# Agent command aliases
+alias code-assistant="$PROJECT_ROOT/agent-commands.sh code"
+alias shell-helper="$PROJECT_ROOT/agent-commands.sh shell"
+alias task-manager="$PROJECT_ROOT/agent-commands.sh tasks"
+alias audit-code="$PROJECT_ROOT/agent-commands.sh audit"
+alias git-helper="$PROJECT_ROOT/agent-commands.sh git"
+alias decision-audit="$PROJECT_ROOT/agent-commands.sh decision"
+
+# Shell Agent aliases
+alias shell-agent="$PROJECT_ROOT/run-shell-agent.sh"
+alias code-audit="$PROJECT_ROOT/run-shell-agent.sh --audit"
+alias task-track="$PROJECT_ROOT/run-shell-agent.sh --tasks"
+alias build-agent="$PROJECT_ROOT/build-shell-agent.sh"
+alias launch-agent="$PROJECT_ROOT/launch-shell-agent.sh"
 
 # Quick project navigation for CodexContinueGPT
-alias cdcc='cd $(git rev-parse --show-toplevel)' # Navigate to repository root
-alias cdcc-docs='cd $(git rev-parse --show-toplevel)/docs'
-alias cdcc-configs='cd $(git rev-parse --show-toplevel)/configs'
+alias cdcc="cd $PROJECT_ROOT"
+alias cdcc-docs="cd $PROJECT_ROOT/docs"
+alias cdcc-configs="cd $PROJECT_ROOT/configs"
+
+# Model Context Protocol (MCP) server aliases
+alias mcp-start="$PROJECT_ROOT/tools/ollama/start_mcp_server.sh"
+alias mcp-start-codellama="$PROJECT_ROOT/tools/ollama/start_mcp_server.sh --model codellama --port 8000"
+alias mcp-start-llama3="$PROJECT_ROOT/tools/ollama/start_mcp_server.sh --model llama3 --port 8000"
+alias mcp-dbgpt="cd $PROJECT_ROOT && uv run dbgpt start webserver --config configs/dbgpt-proxy-ollama-mcp.toml"
+
+# Agent Memory System aliases
+alias agent-memory="$PROJECT_ROOT/agent-memory.sh"
+alias agent-submit="$PROJECT_ROOT/agent-memory.sh submit"
+alias agent-tasks="$PROJECT_ROOT/agent-memory.sh tasks"
+alias agent-output="$PROJECT_ROOT/agent-memory.sh output"
+alias agent-notifications="$PROJECT_ROOT/agent-memory.sh notifications"
+alias agent-init="$PROJECT_ROOT/agent-memory.sh initialize"
+alias agent-patch="$PROJECT_ROOT/agent-memory.sh patch"
+
+# Memory Manager aliases
+alias memory-stats="$PROJECT_ROOT/agent-memory-manager.sh stats"
+alias memory-clean="$PROJECT_ROOT/agent-memory-manager.sh clean"
+alias memory-export="$PROJECT_ROOT/agent-memory-manager.sh export"
+alias memory-worker="$PROJECT_ROOT/agent-memory-manager.sh worker"
+alias memory-help="$PROJECT_ROOT/agent-memory-manager.sh help"
+alias demo-cowork="$PROJECT_ROOT/agent-coworking-demo.sh"
+
+# Co-working aliases for quick task submission
+code-cowork() {
+  "$PROJECT_ROOT/agent-memory.sh" submit code "$*"
+}
+
+shell-cowork() {
+  "$PROJECT_ROOT/agent-memory.sh" submit shell "$*"
+}
+
+audit-cowork() {
+  if [ $# -lt 2 ]; then
+    echo "Usage: audit-cowork <file> \"task description\""
+    return 1
+  fi
+  local file="$1"
+  shift
+  local content=$(cat "$file")
+  "$PROJECT_ROOT/agent-memory.sh" submit audit "Please audit this code from $file: 
+  
+\`\`\`
+$content
+\`\`\`
+
+$*"
+}
+
+git-cowork() {
+  "$PROJECT_ROOT/agent-memory.sh" submit git "$*"
+}
+
+decision-cowork() {
+  "$PROJECT_ROOT/agent-memory.sh" submit decision "$*"
+}
 
 # Print available aliases
-alias cchelp='cat $(git rev-parse --show-toplevel)/.aliases | grep -E "^alias" | sed "s/alias //g" | sort'
+alias cchelp='cat "$PROJECT_ROOT/.aliases" | grep -E "^alias|^[a-zA-Z0-9_-]+\(\)" | sed "s/alias //g" | sort'
 
-echo "CodexContinueGPT aliases loaded! Type 'cchelp' to see all available commands."
+# Print available agent aliases
+alias agent-help='echo -e "Agent Commands:\ncode-assistant, shell-helper, task-manager, audit-code, git-helper, decision-audit\n\nAgent Memory Commands:\nagent-memory, agent-submit, agent-tasks, agent-output, agent-notifications, agent-init\n\nCo-working Commands:\ncode-cowork, shell-cowork, audit-cowork, git-cowork, decision-cowork\n\nMemory Manager Commands:\nmemory-stats, memory-clean, memory-export, memory-worker, memory-help, demo-cowork"'
+
+# Attach this to the cchelp output
+echo "CodexContinueGPT aliases loaded! Type 'cchelp' to see all available commands, or 'agent-help' for agent commands."

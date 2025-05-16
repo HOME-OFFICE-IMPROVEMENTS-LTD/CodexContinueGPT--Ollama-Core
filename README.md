@@ -75,6 +75,7 @@ The purpose is to build infrastructure in the field of large models, through the
 - [Introduction](#introduction)
 - [Install](#install)
 - [Features](#features)
+- [Agent Memory & Co-working](#agent-memory--co-working)
 - [Contribution](#contribution)
 - [Contact](#contact-information)
 
@@ -143,6 +144,7 @@ The core capabilities include the following parts:
   - [SMMF](http://docs.dbgpt.cn/docs/application/advanced_tutorial/smmf)
   - [Finetune](http://docs.dbgpt.cn/docs/application/fine_tuning_manual/dbgpt_hub)
   - [AWEL](http://docs.dbgpt.cn/docs/awel/tutorial)
+  - [Ollama Integration](./OLLAMA_INDEX.md) - Shell integration with local Ollama models
 
 
 ## Features
@@ -239,6 +241,64 @@ At present, we have introduced several key features to showcase our current capa
 
 ### Language Switching
     In the .env configuration file, modify the LANGUAGE parameter to switch to different languages. The default is English (Chinese: zh, English: en, other languages to be added later).
+
+## Agent Memory & Co-working
+
+DB-GPT now includes an advanced Agent Memory System that enhances agent capabilities with persistent memory and co-working functionality. This system allows agents to:
+
+1. **Remember Information Between Sessions**: Agents maintain memory of previous interactions, enabling more contextual and personalized assistance.
+
+2. **Work Asynchronously**: Submit tasks to agents that will be processed while you're away, perfect for long-running or complex tasks.
+
+3. **Collaborate Between Agents**: Different specialized agents can work together on complex problems, sharing insights and context.
+
+### Key Features
+
+- **Persistent Memory**: Conversations, facts, and preferences are stored and recalled
+- **Automatic Summarization**: Older memories are summarized to maintain efficiency
+- **Background Task Processing**: Submit tasks to be processed asynchronously
+- **Task Management**: Track and manage pending, running, and completed tasks
+- **Notifications**: Get notified when background tasks are completed
+
+### Quick Start
+
+```bash
+# Initialize memory system
+./agent-memory.sh initialize
+
+# Patch agent commands to use memory
+./agent-memory.sh patch
+
+# Submit a coding task to be processed in the background
+./agent-memory.sh submit code "Create a Python function to parse JSON data"
+
+# Check task status
+./agent-memory.sh tasks
+
+# View task result when completed
+./agent-memory.sh output <task_id>
+```
+
+### Available Aliases
+
+After running `source .aliases`, you can use these convenient shortcuts:
+
+```bash
+# Submit tasks for background processing
+code-cowork "Create a REST API in Python"
+shell-cowork "Write a script to organize files by type"
+audit-cowork /path/to/file.py "Check for vulnerabilities"
+git-cowork "Suggest a branching strategy"
+decision-cowork "Compare MongoDB vs PostgreSQL"
+
+# Manage tasks and memory
+agent-tasks     # List pending and running tasks
+agent-output    # View task results
+memory-stats    # View memory statistics
+memory-clean    # Clean up old memories
+```
+
+For more information, see [AGENT_MEMORY_GUIDE.md](./AGENT_MEMORY_GUIDE.md)
 
 ## Contribution
 
