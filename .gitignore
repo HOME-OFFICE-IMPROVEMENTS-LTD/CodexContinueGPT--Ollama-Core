@@ -196,3 +196,10 @@ analyze_untracked.sh
 cleanup_git.sh
 .vscode-ctags
 **/backup_scripts_*/
+
+# Added automatically on Fri May 16 05:31:48 BST 2025
+*.bak
+auto-commit.sh
+analyze_untracked.sh
+.vscode-ctags
+**/backup_scripts_*/

@@ -1,0 +1,57 @@
+# Dockerfile for DB-GPT Shell Agent with Ollama
+FROM ollama/ollama:latest
+
+# Set working directory
+WORKDIR /app
+
+# Install necessary tools
+RUN apt-get update && \
+    apt-get install -y \
+    curl \
+    wget \
+    vim \
+    nano \
+    git \
+    jq \
+    python3 \
+    python3-pip \
+    bash-completion \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create directories for persistence
+RUN mkdir -p /root/.ollama
+RUN mkdir -p /app/agent
+
+# Copy required files
+COPY shell-agent.Modelfile /app/agent/
+COPY build-shell-agent.sh /app/agent/
+COPY run-shell-agent.sh /app/agent/
+COPY .aliases /app/agent/
+COPY ollama-commands.sh /app/agent/
+
+# Make scripts executable
+RUN chmod +x /app/agent/*.sh
+
+# Set up shell agent initialization
+RUN echo '#!/bin/bash' > /app/agent/entrypoint.sh && \
+    echo 'echo "Starting Ollama service..."' >> /app/agent/entrypoint.sh && \
+    echo 'ollama serve &' >> /app/agent/entrypoint.sh && \
+    echo 'sleep 5' >> /app/agent/entrypoint.sh && \
+    echo 'echo "Building shell agent model..."' >> /app/agent/entrypoint.sh && \
+    echo 'cd /app/agent && ./build-shell-agent.sh' >> /app/agent/entrypoint.sh && \
+    echo 'echo "Shell agent is ready!"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "Type ./run-shell-agent.sh to interact with the agent"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "or use shell-agent command after running: source .aliases"' >> /app/agent/entrypoint.sh && \
+    echo 'exec /bin/bash' >> /app/agent/entrypoint.sh && \
+    chmod +x /app/agent/entrypoint.sh
+
+# Add aliases to bash profile
+RUN echo 'source /app/agent/.aliases' >> /root/.bashrc && \
+    echo 'export PATH="/app/agent:$PATH"' >> /root/.bashrc && \
+    echo 'cd /app/agent' >> /root/.bashrc
+
+# Set the entrypoint
+ENTRYPOINT ["/app/agent/entrypoint.sh"]
+
+# Keep container running
+CMD ["bash"]

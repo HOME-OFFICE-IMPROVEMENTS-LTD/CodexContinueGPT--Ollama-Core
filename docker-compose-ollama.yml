@@ -1,0 +1,81 @@
+# DB-GPT Docker Compose Custom Configuration for Ollama Integration
+
+services:
+  db:
+    image: mysql/mysql-server
+    environment:
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'aa123456'
+    ports:
+      - 3306:3306
+    volumes:
+      - dbgpt-myql-db:/var/lib/mysql
+      - ./docker/examples/my.cnf:/etc/my.cnf
+      - ./docker/examples/sqls:/docker-entrypoint-initdb.d
+      - ./assets/schema/dbgpt.sql:/docker-entrypoint-initdb.d/dbgpt.sql
+    restart: unless-stopped
+    networks:
+      - dbgptnet
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - 11434:11434
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - dbgptnet
+    command: serve
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/version"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  webserver:
+    image: eosphorosai/dbgpt-openai:latest
+    command: dbgpt start webserver --config /app/configs/dbgpt-proxy-ollama.toml
+    environment:
+      - MYSQL_PASSWORD=aa123456
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=dbgpt
+      - MYSQL_USER=root
+      # Use ollama container as the API service
+      - OLLAMA_HOST=ollama
+      - OLLAMA_PORT=11434
+    volumes:
+      - ./configs:/app/configs
+      - /data:/data
+      - /data/models:/app/models
+      - dbgpt-data:/app/pilot/data
+      - dbgpt-message:/app/pilot/message
+      # Make sure our custom .aliases file is available in container
+      - ./.aliases:/app/.aliases
+      - ./ollama-commands.sh:/app/ollama-commands.sh
+    depends_on:
+      - db
+      - ollama
+    ports:
+      - 5670:5670/tcp
+    restart: unless-stopped
+    networks:
+      - dbgptnet
+    ipc: host
+    # Show Ollama commands on container startup
+    entrypoint: >
+      bash -c "echo -e '\n\033[36m===== DB-GPT with Ollama Integration =====\033[0m' &&
+               echo -e '\033[33mLoad aliases with: source /app/.aliases\033[0m' &&
+               echo -e '\033[33mShow commands with: /app/ollama-commands.sh\033[0m\n' &&
+               dbgpt start webserver --config /app/configs/dbgpt-proxy-ollama.toml"
+
+volumes:
+  dbgpt-myql-db:
+  dbgpt-data:
+  dbgpt-message:
+  dbgpt-alembic-versions:
+  ollama-data:
+networks:
+  dbgptnet:
