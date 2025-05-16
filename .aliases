@@ -120,6 +120,11 @@ alias agent-notifications="$PROJECT_ROOT/agent-memory.sh notifications"
 alias agent-init="$PROJECT_ROOT/agent-memory.sh initialize"
 alias agent-patch="$PROJECT_ROOT/agent-memory.sh patch"
 
+# Shell Training aliases
+alias shell-train="$PROJECT_ROOT/launch-shell-training.sh"
+alias shell-train-codellama="$PROJECT_ROOT/launch-shell-training.sh --model codellama"
+alias shell-train-llama3="$PROJECT_ROOT/launch-shell-training.sh --model llama3"
+
 # Memory Manager aliases
 alias memory-stats="$PROJECT_ROOT/agent-memory-manager.sh stats"
 alias memory-clean="$PROJECT_ROOT/agent-memory-manager.sh clean"
@@ -166,7 +171,7 @@ decision-cowork() {
 alias cchelp='cat "$PROJECT_ROOT/.aliases" | grep -E "^alias|^[a-zA-Z0-9_-]+\(\)" | sed "s/alias //g" | sort'
 
 # Print available agent aliases
-alias agent-help='echo -e "Agent Commands:\ncode-assistant, shell-helper, task-manager, audit-code, git-helper, decision-audit\n\nAgent Memory Commands:\nagent-memory, agent-submit, agent-tasks, agent-output, agent-notifications, agent-init\n\nCo-working Commands:\ncode-cowork, shell-cowork, audit-cowork, git-cowork, decision-cowork\n\nMemory Manager Commands:\nmemory-stats, memory-clean, memory-export, memory-worker, memory-help, demo-cowork"'
+alias agent-help='echo -e "Agent Commands:\ncode-assistant, shell-helper, task-manager, audit-code, git-helper, decision-audit\n\nAgent Memory Commands:\nagent-memory, agent-submit, agent-tasks, agent-output, agent-notifications, agent-init\n\nCo-working Commands:\ncode-cowork, shell-cowork, audit-cowork, git-cowork, decision-cowork\n\nMemory Manager Commands:\nmemory-stats, memory-clean, memory-export, memory-worker, memory-help, demo-cowork\n\nShell Training Commands:\nshell-train, shell-train-codellama, shell-train-llama3"'
 
 # Attach this to the cchelp output
 echo "CodexContinueGPT aliases loaded! Type 'cchelp' to see all available commands, or 'agent-help' for agent commands."
