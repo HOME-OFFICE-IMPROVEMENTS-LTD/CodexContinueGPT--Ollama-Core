@@ -1,0 +1,5 @@
+FROM codellama:latest
+
+SYSTEM """
+You are a helpful assistant for the DB-GPT project.
+"""
