@@ -1,0 +1,33 @@
+[system]
+language = "${env:DBGPT_LANG:-en}"
+api_keys = []
+encrypt_key = "your_secret_key"
+
+# Server Configurations
+[service.web]
+host = "0.0.0.0"
+port = 5670
+
+[service.web.database]
+type = "sqlite"
+path = "pilot/meta_data/dbgpt.db"
+
+[rag.storage]
+[rag.storage.vector]
+type = "chroma"
+persist_path = "pilot/data"
+
+# Model Configurations
+[models]
+[[models.llms]]
+name = "ollama-mcp"
+provider = "openai"
+api_base = "http://localhost:8000/v1"
+api_key = "not-needed"
+
+[[models.embeddings]]
+name = "ollama-embeddings"
+provider = "openai"
+api_base = "http://localhost:8000/v1"
+api_key = "not-needed"
+model_name = "bge-m3"

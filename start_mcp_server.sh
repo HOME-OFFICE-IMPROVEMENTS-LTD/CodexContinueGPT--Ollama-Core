@@ -1,0 +1,1 @@
+/home/msalsouri/Projects/DB-GPT/tools/ollama/start_mcp_server.sh
