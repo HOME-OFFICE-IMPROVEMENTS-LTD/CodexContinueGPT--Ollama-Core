@@ -45,6 +45,24 @@ echo -e "${YELLOW}mcp-start-llama3${NC}       ${GREEN}# Start MCP server with Ll
 echo -e "${YELLOW}mcp-dbgpt${NC}              ${GREEN}# Start DB-GPT with MCP configuration${NC}"
 echo ""
 
+# Show Enhanced MCP commands
+echo -e "${MAGENTA}=== Enhanced MCP Server ===${NC}"
+echo -e "${YELLOW}mcp-enhanced-codellama${NC} ${GREEN}# Start Enhanced MCP server with CodeLlama${NC}"
+echo -e "${YELLOW}mcp-enhanced-llama3${NC}    ${GREEN}# Start Enhanced MCP server with Llama3${NC}"
+echo -e "${YELLOW}mcp-test${NC}               ${GREEN}# Test the Enhanced MCP server${NC}"
+echo -e "${YELLOW}mcp-benchmark${NC}          ${GREEN}# Benchmark models via Enhanced MCP server${NC}"
+echo -e "${YELLOW}mcp-memory${NC}             ${GREEN}# Use MCP server with Agent Memory system${NC}"
+echo ""
+
+# Show Enhanced Shell Agent commands
+echo -e "${MAGENTA}=== Enhanced Shell Agents ===${NC}"
+echo -e "${YELLOW}enhanced-shell${NC}         ${GREEN}# Start Enhanced Shell Agent with streaming${NC}"
+echo -e "${YELLOW}enhanced-shell-code${NC}    ${GREEN}# Start Enhanced Shell Agent in code mode${NC}"
+echo -e "${YELLOW}mcp-memory-start${NC}       ${GREEN}# Start MCP Memory Agent${NC}"
+echo -e "${YELLOW}mcp-memory-ask${NC}         ${GREEN}# Ask a question with memory context${NC}"
+echo -e "${YELLOW}mcp-memory-remember${NC}    ${GREEN}# Store information in memory${NC}"
+echo ""
+
 # Show Agent Commands (using standard Ollama)
 echo -e "${MAGENTA}=== Agent Commands ===${NC}"
 echo -e "${YELLOW}code-assistant${NC}         ${GREEN}# Use CodeLlama for code assistance${NC}"

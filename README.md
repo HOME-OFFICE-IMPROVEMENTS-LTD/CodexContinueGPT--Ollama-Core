@@ -46,7 +46,7 @@ The purpose is to build infrastructure in the field of large models, through the
 🚀 **In the Data 3.0 era, based on models and databases, enterprises and developers can build their own bespoke applications with less code.**
 
 ### DISCKAIMER
-- [disckaimer](./DISCKAIMER.md)
+- [disckaimer](docs/wiki/DISCKAIMER.md)
 
 ### AI-Native Data App 
 ---
@@ -144,7 +144,7 @@ The core capabilities include the following parts:
   - [SMMF](http://docs.dbgpt.cn/docs/application/advanced_tutorial/smmf)
   - [Finetune](http://docs.dbgpt.cn/docs/application/fine_tuning_manual/dbgpt_hub)
   - [AWEL](http://docs.dbgpt.cn/docs/awel/tutorial)
-  - [Ollama Integration](./OLLAMA_INDEX.md) - Shell integration with local Ollama models
+  - [Ollama Integration](docs/wiki/OLLAMA_INDEX.md) - Shell integration with local Ollama models
 
 
 ## Features
@@ -298,7 +298,7 @@ memory-stats    # View memory statistics
 memory-clean    # Clean up old memories
 ```
 
-For more information, see [AGENT_MEMORY_GUIDE.md](./AGENT_MEMORY_GUIDE.md)
+For more information, see [AGENT_MEMORY_GUIDE.md](docs/wiki/AGENT_MEMORY_GUIDE.md)
 
 ## Contribution
 

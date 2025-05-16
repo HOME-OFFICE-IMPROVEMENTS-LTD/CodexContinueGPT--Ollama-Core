@@ -1,1 +1,0 @@
-/home/msalsouri/Projects/DB-GPT/docs/wiki/ALIASES_README.md

@@ -33,4 +33,4 @@ dbgpt start webserver --config .devcontainer/dev.toml
 
 # Create A Pull Request
 
-Please refer to [CONTRIBUTING.md](../CONTRIBUTING.md). Before executing the make script or git commit, remember to deactivate the current virtual environment in the development environment.
+Please refer to [CONTRIBUTING.md](../docs/wiki/CONTRIBUTING.md). Before executing the make script or git commit, remember to deactivate the current virtual environment in the development environment.
