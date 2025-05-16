@@ -213,3 +213,13 @@ auto-commit.sh
 analyze_untracked.sh
 .vscode-ctags
 **/backup_scripts_*/
+# Temporary and backup files
+*.bak
+*.tmp
+*temp*
+.shell_training_*
+.shell_agent_tasks*
+
+# Alternative versions and test files
+integrated-memory-manager.sh
+test-model.Modelfile
