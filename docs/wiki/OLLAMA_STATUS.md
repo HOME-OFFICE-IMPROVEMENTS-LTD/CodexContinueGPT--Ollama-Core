@@ -28,6 +28,20 @@ The Ollama shell integration feature branch in the DB-GPT project is fully opera
 ✅ **dbgpt-proxy-ollama-mcp.toml** - Configuration for DB-GPT to use MCP
 ✅ **test_mcp_server.py** - Test script to verify MCP functionality
 
+### Enhanced MCP Server (New)
+✅ **mcp_ollama_server_enhanced.py** - Added streaming support and improved error handling
+✅ **start_enhanced_mcp_server.sh** - Script to easily start the enhanced MCP server
+✅ **test_enhanced_mcp_server.py** - Comprehensive test script for the enhanced server
+✅ **ENHANCED_MCP_OLLAMA.md** - Documentation for enhanced MCP implementation
+✅ **benchmark_mcp_models.py** - Model benchmarking tool for performance comparison
+✅ **benchmark_mcp_server.sh** - Simplified script to run benchmarks
+
+### Enhanced Agent Integration (New)
+✅ **enhanced-shell-agent.sh** - Shell agent with streaming support
+✅ **mcp-memory-agent.sh** - Integration between MCP and agent memory system
+✅ **ENHANCED_SHELL_AGENT.md** - Documentation for enhanced shell agent
+✅ **MCP_MEMORY_AGENT.md** - Documentation for MCP memory agent integration
+
 ### Documentation
 ✅ **MCP_OLLAMA.md** - Documentation for the MCP implementation
 ✅ **OLLAMA_INTEGRATION.md** - Updated with MCP information

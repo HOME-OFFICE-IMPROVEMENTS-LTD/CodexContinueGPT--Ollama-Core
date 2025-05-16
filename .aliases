@@ -95,6 +95,22 @@ alias mcp-start-codellama="$PROJECT_ROOT/tools/ollama/start_mcp_server.sh --mode
 alias mcp-start-llama3="$PROJECT_ROOT/tools/ollama/start_mcp_server.sh --model llama3 --port 8000"
 alias mcp-dbgpt="cd $PROJECT_ROOT && uv run dbgpt start webserver --config configs/dbgpt-proxy-ollama-mcp.toml"
 
+# Enhanced MCP server aliases
+alias mcp-enhanced="$PROJECT_ROOT/tools/ollama/start_enhanced_mcp_server.sh"
+alias mcp-enhanced-codellama="$PROJECT_ROOT/tools/ollama/start_enhanced_mcp_server.sh --model codellama --port 8000"
+alias mcp-enhanced-llama3="$PROJECT_ROOT/tools/ollama/start_enhanced_mcp_server.sh --model llama3 --port 8000"
+alias mcp-test="$PROJECT_ROOT/tools/ollama/test_enhanced_mcp_server.py"
+alias mcp-benchmark="$PROJECT_ROOT/tools/ollama/benchmark_mcp_server.sh"
+
+# Enhanced Shell Agent aliases
+alias enhanced-shell="$PROJECT_ROOT/enhanced-shell-agent.sh"
+alias enhanced-shell-code="$PROJECT_ROOT/enhanced-shell-agent.sh --mode code"
+alias enhanced-shell-creative="$PROJECT_ROOT/enhanced-shell-agent.sh --mode creative"
+alias mcp-memory-agent="$PROJECT_ROOT/mcp-memory-agent.sh"
+alias mcp-memory-start="$PROJECT_ROOT/mcp-memory-agent.sh start"
+alias mcp-memory-ask="$PROJECT_ROOT/mcp-memory-agent.sh ask"
+alias mcp-memory-remember="$PROJECT_ROOT/mcp-memory-agent.sh remember"
+
 # Agent Memory System aliases
 alias agent-memory="$PROJECT_ROOT/agent-memory.sh"
 alias agent-submit="$PROJECT_ROOT/agent-memory.sh submit"

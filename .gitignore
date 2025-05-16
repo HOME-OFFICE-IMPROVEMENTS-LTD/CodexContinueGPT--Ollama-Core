@@ -202,3 +202,10 @@ auto-commit.sh
 analyze_untracked.sh
 .vscode-ctags
 **/backup_scripts_*/
+
+# Added automatically on Fri May 16 19:02:25 BST 2025
+*.bak
+auto-commit.sh
+analyze_untracked.sh
+.vscode-ctags
+**/backup_scripts_*/

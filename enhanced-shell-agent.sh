@@ -1,0 +1,1 @@
+/home/msalsouri/Projects/DB-GPT/tools/ollama/enhanced_shell_agent.sh
