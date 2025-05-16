@@ -7,6 +7,7 @@ This index provides links to all documentation in the DB-GPT project. Currently,
 - Ollama Integration (19 files)
 - Model Context Protocol (15 files)
 - Agent System (10 files)
+- Shell Training (1 file)
 
 ## Ollama Integration
 
@@ -27,6 +28,7 @@ This index provides links to all documentation in the DB-GPT project. Currently,
 
 - [Enhanced Shell Agent](ENHANCED_SHELL_AGENT.md) - Enhanced shell agent with streaming
 - [Agent Memory Guide](AGENT_MEMORY_GUIDE.md) - Guide for using agent memory system
+- [Shell Training System](SHELL_TRAINING.md) - Interactive shell command training system
 
 ## Project Information
 
