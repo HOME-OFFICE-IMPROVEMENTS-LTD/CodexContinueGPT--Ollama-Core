@@ -189,3 +189,10 @@ thirdparty
 configs/my
 .devcontainer/dev.toml
 test_docs
+# Added automatically on Fri May 16 05:23:11 BST 2025
+*.bak
+auto-commit.sh
+analyze_untracked.sh
+cleanup_git.sh
+.vscode-ctags
+**/backup_scripts_*/
