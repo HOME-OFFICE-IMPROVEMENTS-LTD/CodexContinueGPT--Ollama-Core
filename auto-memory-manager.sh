@@ -46,7 +46,9 @@ if [ $free_mem -lt 2000000 ]; then
     case "$choice" in
         1)
             echo -e "${YELLOW}Starting minimal shell agent...${NC}"
-            if [ -f "$PROJECT_ROOT/test-minimal-agent.sh" ]; then
+            if [ -f "$PROJECT_ROOT/tools/memory/test-minimal-agent.sh" ]; then
+                "$PROJECT_ROOT/tools/memory/test-minimal-agent.sh"
+            elif [ -f "$PROJECT_ROOT/test-minimal-agent.sh" ]; then
                 "$PROJECT_ROOT/test-minimal-agent.sh"
             else
                 echo -e "${RED}Minimal shell agent not found.${NC}"
@@ -55,7 +57,10 @@ if [ $free_mem -lt 2000000 ]; then
             ;;
         2)
             echo -e "${YELLOW}Cleaning up memory...${NC}"
-            if [ -f "$PROJECT_ROOT/cleanup-ollama.sh" ]; then
+            if [ -f "$PROJECT_ROOT/tools/memory/cleanup-ollama.sh" ]; then
+                "$PROJECT_ROOT/tools/memory/cleanup-ollama.sh"
+                exec "$0" # Re-run this script after cleanup
+            elif [ -f "$PROJECT_ROOT/cleanup-ollama.sh" ]; then
                 "$PROJECT_ROOT/cleanup-ollama.sh"
                 exec "$0" # Re-run this script after cleanup
             else

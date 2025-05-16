@@ -7,9 +7,14 @@ GREEN='\033[0;32m'
 CYAN='\033[0;36m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
 RED='\033[0;31m'
 BOLD='\033[1m'
 NC='\033[0m' # No Color
+
+# Memory base directory
+MEMORY_BASE_DIR="$HOME/.dbgpt_agents"
+TASK_QUEUE_DIR="$MEMORY_BASE_DIR/tasks"
 
 # Get project root directory
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -27,12 +32,16 @@ show_help() {
     echo -e "  ${GREEN}kill${NC}                Stop all Ollama processes"
     echo -e "  ${GREEN}optimize${NC}            Launch optimization tools"
     echo -e "  ${GREEN}auto${NC}                Auto-select agent based on memory"
+    echo -e "  ${GREEN}agent${NC}               Manage agent memory and tasks"
+    echo -e "  ${GREEN}dashboard${NC}           Show memory usage dashboard"
     echo -e "  ${GREEN}help${NC}                Show this help message"
     echo ""
     echo -e "${BOLD}EXAMPLES:${NC}"
     echo -e "  ${CYAN}$(basename "$0") status${NC}           # Show current memory status"
     echo -e "  ${CYAN}$(basename "$0") clean aggressive${NC} # Perform aggressive memory cleanup"
     echo -e "  ${CYAN}$(basename "$0") monitor${NC}          # Start real-time memory monitoring"
+    echo -e "  ${CYAN}$(basename "$0") dashboard${NC}        # Show memory usage dashboard"
+    echo -e "  ${CYAN}$(basename "$0") agent list${NC}       # List agent memories and tasks"
     echo ""
 }
 
@@ -104,9 +113,11 @@ monitor_memory() {
     echo -e "${BOLD}${BLUE}Real-time Memory Monitor${NC}"
     echo -e "${YELLOW}Press Ctrl+C to exit${NC}\n"
     
-    # Check if watch is installed
+    # Use watch if available
     if command -v watch &> /dev/null; then
-        if [ -f "$PROJECT_ROOT/monitor-memory.sh" ]; then
+        if [ -f "$PROJECT_ROOT/tools/memory/monitor-memory.sh" ]; then
+            watch -n 2 "$PROJECT_ROOT/tools/memory/monitor-memory.sh"
+        elif [ -f "$PROJECT_ROOT/monitor-memory.sh" ]; then
             watch -n 2 "$PROJECT_ROOT/monitor-memory.sh"
         else
             watch -n 2 "free -h && echo '' && ps aux | grep ollama | grep -v grep"
@@ -237,7 +248,9 @@ optimize_memory() {
     
     case "$choice" in
         1)
-            if [ -f "$PROJECT_ROOT/optimize-ollama-params.sh" ]; then
+            if [ -f "$PROJECT_ROOT/tools/memory/optimize-ollama-params.sh" ]; then
+                "$PROJECT_ROOT/tools/memory/optimize-ollama-params.sh" --interactive
+            elif [ -f "$PROJECT_ROOT/optimize-ollama-params.sh" ]; then
                 "$PROJECT_ROOT/optimize-ollama-params.sh" --interactive
             else
                 echo -e "${RED}Error: Parameter optimizer not found.${NC}"
@@ -292,6 +305,44 @@ auto_select_agent() {
     fi
 }
 
+# Function to show memory dashboard
+show_memory_dashboard() {
+    # Use watch to update every 3 seconds
+    if command -v watch &> /dev/null; then
+        watch -n 3 "bash -c 'echo -e \"===== DB-GPT Memory Dashboard =====\n\"; free -h; echo -e \"\n=== Top Memory Processes ===\"; ps aux --sort=-%mem | head -6; echo -e \"\n=== Ollama Processes ===\"; ps aux | grep ollama | grep -v grep | sort -k 4 -r; echo -e \"\n=== Disk Usage ===\"; df -h / /home | grep -v \"tmpfs\";'"
+    else
+        # Fallback to basic loop if watch is not available
+        while true; do
+            clear
+            echo -e "${BOLD}${BLUE}===== DB-GPT Memory Dashboard =====${NC}\n"
+            
+            # Show memory usage
+            free -h
+            echo -e "\n${BOLD}${BLUE}=== Top Memory Processes ===${NC}"
+            ps aux --sort=-%mem | head -6
+            echo -e "\n${BOLD}${BLUE}=== Ollama Processes ===${NC}"
+            ps aux | grep ollama | grep -v grep | sort -k 4 -r
+            echo -e "\n${BOLD}${BLUE}=== Disk Usage ===${NC}"
+            df -h / /home | grep -v "tmpfs"
+            
+            echo -e "\n${YELLOW}Press Ctrl+C to exit${NC}"
+            sleep 3
+        done
+    fi
+}
+
+# Function to manage agent memory
+manage_agent_memory() {
+    # Check if agent memory manager exists
+    if [ ! -f "$PROJECT_ROOT/agent-memory-manager.sh" ]; then
+        echo -e "${RED}Error: agent-memory-manager.sh not found${NC}"
+        return 1
+    fi
+    
+    # Pass all arguments to the agent memory manager
+    "$PROJECT_ROOT/agent-memory-manager.sh" "$@"
+}
+
 # Parse command line arguments
 if [ $# -eq 0 ]; then
     # Interactive mode
@@ -314,9 +365,11 @@ if [ $# -eq 0 ]; then
         echo -e "4. ${GREEN}Stop Ollama processes${NC}"
         echo -e "5. ${GREEN}Optimize memory usage${NC}"
         echo -e "6. ${GREEN}Auto-select agent${NC}"
-        echo -e "7. ${GREEN}Exit${NC}"
+        echo -e "7. ${GREEN}Show memory dashboard${NC}"
+        echo -e "8. ${GREEN}Manage agent memory${NC}"
+        echo -e "9. ${GREEN}Exit${NC}"
         
-        echo -ne "\n${BOLD}Enter choice (1-7):${NC} "
+        echo -ne "\n${BOLD}Enter choice (1-9):${NC} "
         read -r choice
         
         case "$choice" in
@@ -375,6 +428,22 @@ if [ $# -eq 0 ]; then
                 ;;
             
             7)
+                clear
+                show_memory_dashboard
+                ;;
+                
+            8)
+                clear
+                echo -e "${BOLD}${BLUE}Agent Memory Management${NC}\n"
+                echo -e "${CYAN}Available commands: list, clean, archive, help${NC}"
+                echo -ne "\n${BOLD}Enter command:${NC} "
+                read -r agent_cmd
+                manage_agent_memory $agent_cmd
+                echo -e "\n${YELLOW}Press Enter to continue...${NC}"
+                read -r
+                ;;
+            
+            9)
                 echo -e "${YELLOW}Exiting...${NC}"
                 exit 0
                 ;;
@@ -414,6 +483,15 @@ else
         
         auto)
             auto_select_agent
+            ;;
+        
+        dashboard)
+            show_memory_dashboard
+            ;;
+            
+        agent)
+            shift
+            manage_agent_memory "$@"
             ;;
         
         help)

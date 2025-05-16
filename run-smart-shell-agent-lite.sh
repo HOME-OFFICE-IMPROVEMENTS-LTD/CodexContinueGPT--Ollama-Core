@@ -60,8 +60,18 @@ build_model() {
     # Create a memory-efficient Modelfile
     TEMP_MODELFILE=$(mktemp)
     
-    # Write basic modelfile
-    cat > "$TEMP_MODELFILE" << EOF
+    # Check if model file exists in various locations
+    if [ -f "$PROJECT_ROOT/tools/memory/models/$MODEL.Modelfile" ]; then
+        cat "$PROJECT_ROOT/tools/memory/models/$MODEL.Modelfile" > "$TEMP_MODELFILE"
+        echo -e "${GREEN}Using model definition from tools/memory/models/${MODEL}.Modelfile${NC}"
+    elif [ -f "$PROJECT_ROOT/$MODEL.Modelfile" ]; then
+        cat "$PROJECT_ROOT/$MODEL.Modelfile" > "$TEMP_MODELFILE"
+        echo -e "${GREEN}Using model definition from ${MODEL}.Modelfile${NC}"
+    else
+        echo -e "${YELLOW}Model definition not found. Creating a basic model...${NC}"
+        
+        # Write basic modelfile
+        cat > "$TEMP_MODELFILE" << EOF
 FROM codellama:latest
 
 # Set parameters for optimal response with lower memory usage
@@ -102,8 +112,14 @@ EOF
     # Build the model with ollama
     if ollama create "$MODEL" -f "$TEMP_MODELFILE"; then
         echo -e "${GREEN}Model built successfully!${NC}"
-        # Save a copy of the successful modelfile
+        # Save a copy of the successful modelfile to both locations
         cp "$TEMP_MODELFILE" "$PROJECT_ROOT/$MODEL.Modelfile"
+        
+        # Save to tools directory if it exists
+        if [ -d "$PROJECT_ROOT/tools/memory/models" ]; then
+            cp "$TEMP_MODELFILE" "$PROJECT_ROOT/tools/memory/models/$MODEL.Modelfile"
+            echo -e "${GREEN}Saved model definition to tools/memory/models/${NC}"
+        fi
     else
         echo -e "${RED}Error building model. Check the Modelfile for syntax errors.${NC}"
         echo -e "${YELLOW}Saving problematic Modelfile for debugging to $PROJECT_ROOT/debug-modelfile-lite.txt${NC}"
@@ -175,6 +191,39 @@ cleanup_and_commit() {
     fi
 }
 
+# Check if model exists and build if needed
+check_model() {
+    # Check for model files in different locations
+    if [ -f "$PROJECT_ROOT/tools/memory/models/$MODEL.Modelfile" ]; then
+        MODEL_PATH="$PROJECT_ROOT/tools/memory/models/$MODEL.Modelfile"
+    elif [ -f "$PROJECT_ROOT/$MODEL.Modelfile" ]; then
+        MODEL_PATH="$PROJECT_ROOT/$MODEL.Modelfile"
+    fi
+
+    # Build the model if requested or if it doesn't exist
+    if [ "$BUILD" = true ] || ! ollama list | grep -q "$MODEL"; then
+        if [ "$BUILD" != true ]; then
+            echo -e "${YELLOW}Model $MODEL not found. Building it now...${NC}"
+        fi
+        build_model
+    fi
+
+    # Verify the model works properly
+    echo -e "${YELLOW}Testing the model...${NC}"
+    if ! (echo "Test" | ollama run "$MODEL" "Reply with one word: Working" | grep -q "Working"); then
+        echo -e "${RED}Error: The model doesn't seem to be working properly.${NC}"
+        echo -e "${YELLOW}Attempting to rebuild the model...${NC}"
+        build_model
+        
+        # Test again after rebuilding
+        if ! (echo "Test" | ollama run "$MODEL" "Reply with one word: Working" | grep -q "Working"); then
+            echo -e "${RED}Error: Model still not working after rebuild. Please check the Ollama installation.${NC}"
+            exit 1
+        fi
+    fi
+    echo -e "${GREEN}Model is working properly!${NC}"
+}
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -207,26 +256,8 @@ if [ "$BUILD" = true ]; then
     build_model
 fi
 
-# Check if the model exists
-if ! ollama list | grep -q "$MODEL"; then
-    echo -e "${YELLOW}Model $MODEL not found. Building it now...${NC}"
-    build_model
-fi
-
-# Verify the model works properly
-echo -e "${YELLOW}Testing the model...${NC}"
-if ! (echo "Test" | ollama run "$MODEL" "Reply with one word: Working" | grep -q "Working"); then
-    echo -e "${RED}Error: The model doesn't seem to be working properly.${NC}"
-    echo -e "${YELLOW}Attempting to rebuild the model...${NC}"
-    build_model
-    
-    # Test again after rebuilding
-    if ! (echo "Test" | ollama run "$MODEL" "Reply with one word: Working" | grep -q "Working"); then
-        echo -e "${RED}Error: Model still not working after rebuild. Please check the Ollama installation.${NC}"
-        exit 1
-    fi
-fi
-echo -e "${GREEN}Model is working properly!${NC}"
+# Check if the model exists and test it
+check_model
 
 # Execute the requested action
 if [ "$CLEANUP" = true ]; then
