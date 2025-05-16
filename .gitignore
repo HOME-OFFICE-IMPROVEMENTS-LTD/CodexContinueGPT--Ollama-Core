@@ -22,6 +22,10 @@ lib64/
 parts/
 sdist/
 
+# Shell agent files
+.shell_agent_history*
+.shell_agent_tasks*
+
 var/
 wheels/
 /models/
