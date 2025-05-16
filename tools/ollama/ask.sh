@@ -15,7 +15,7 @@ OLLAMA_API="http://localhost:11434"
 
 # Script paths
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-REPO_ROOT="$SCRIPT_DIR"  # Since this is already the repo root
+REPO_ROOT="$( cd "$SCRIPT_DIR/../.." && pwd )"
 
 # Help function
 show_help() {
