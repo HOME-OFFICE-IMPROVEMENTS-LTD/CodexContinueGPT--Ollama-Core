@@ -1,5 +1,0 @@
-FROM codellama:latest
-
-SYSTEM """
-You are a helpful assistant.
-"""

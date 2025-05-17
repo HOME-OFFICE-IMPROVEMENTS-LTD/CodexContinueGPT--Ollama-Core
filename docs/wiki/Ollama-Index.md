@@ -16,7 +16,6 @@ This index page provides links to all documentation related to the Ollama integr
 - [Enhanced Shell Agent](ENHANCED_SHELL_AGENT.md) - Shell agent with streaming capabilities
 - [MCP Memory Agent Integration](MCP_MEMORY_AGENT.md) - MCP integration with agent memory system
 - [Model Benchmarking Tool](BENCHMARK_TOOL.md) - Performance comparison of different models
-- [Shell Training System](SHELL_TRAINING.md) - Interactive shell command training with AI assistance
 - [Agent Memory Integration](AGENT_MEMORY_GUIDE.md) - Working with the agent memory system
 
 ## Setup Guides
@@ -40,8 +39,7 @@ All scripts referenced in the documentation can be found in the `/tools/ollama/`
 - `benchmark_mcp_server.sh` - Script to run model benchmarks
 - `mcp_memory_agent.sh` - MCP integration with agent memory
 - `enhanced_shell_agent.sh` - Enhanced shell agent with streaming
-- `shell-training.sh` - Interactive shell command training system
-- `launch-shell-training.sh` - Launcher script for shell training
+- `alias-cheatsheet.md` - Comprehensive reference for project aliases
 - `download_docs.sh` - Download reference documentation
 - `fix_paths.sh` - Fix hardcoded paths in scripts
 

@@ -25,6 +25,10 @@ sdist/
 # Shell agent files
 .shell_agent_history*
 .shell_agent_tasks*
+backup_cleanup/
+*.bak
+temp-*
+*.tmp
 
 var/
 wheels/

@@ -300,48 +300,6 @@ memory-clean    # Clean up old memories
 
 For more information, see [AGENT_MEMORY_GUIDE.md](docs/wiki/AGENT_MEMORY_GUIDE.md)
 
-## Shell Training System
-
-The DB-GPT Shell Training System provides an interactive way to learn shell commands and scripting through progressively challenging exercises with AI assistance.
-
-### Key Features
-
-- **Progressive Learning**: 10 lessons from basic navigation to advanced scripting
-- **Interactive Exercises**: Practice commands with real-time feedback
-- **AI-Assisted Training**: Uses the Enhanced Shell Agent to provide explanations
-- **Progress Tracking**: Saves your progress between sessions
-
-### Quick Start
-
-```bash
-# Start the shell training with default settings
-shell-train
-
-# Start with a specific lesson
-shell-train --lesson 3
-
-# Use a specific language model
-shell-train-llama3
-
-# List all available lessons
-shell-train --list
-```
-
-### Training Structure
-
-Each lesson covers specific shell topics:
-1. Basic Navigation
-2. File Operations 
-3. Text Processing
-4. Pipes and Redirection
-5. Shell Scripting Basics
-6. Process Management
-7. User and Permissions
-8. Environment Variables
-9. Regular Expressions
-10. Advanced Scripting
-
-For more information, see [SHELL_TRAINING.md](docs/wiki/SHELL_TRAINING.md)
 
 ## Contribution
 

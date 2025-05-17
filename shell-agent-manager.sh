@@ -311,19 +311,10 @@ show_docs() {
             fi
             ;;
         
-        shell|training)
-            if [ -f "$PROJECT_ROOT/shell-training-README.md" ]; then
-                if command -v bat &> /dev/null; then
-                    bat --style=plain "$PROJECT_ROOT/shell-training-README.md"
-                elif command -v mdless &> /dev/null; then
-                    mdless "$PROJECT_ROOT/shell-training-README.md"
-                else
-                    cat "$PROJECT_ROOT/shell-training-README.md"
-                fi
-            else
-                echo -e "${RED}Error: Documentation not found for Shell Training${NC}"
-                return 1
-            fi
+        shell)
+            echo -e "${YELLOW}Shell training has been removed as it's no longer needed with the talking chatbot.${NC}"
+            echo -e "${GREEN}Use the interactive chatbot instead for shell assistance.${NC}"
+            ;;
             ;;
         
         *)
