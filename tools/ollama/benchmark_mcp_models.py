@@ -245,20 +245,34 @@ def main():
         console.print(f"[red]{health_data}[/]")
         return 1
     
-    console.print(f"[bold green]Server is running:[/] {health_data['status']}")
-    console.print(f"[bold green]Ollama version:[/] {health_data.get('ollama_version', 'unknown')}")
-    console.print(f"[bold green]API base:[/] {health_data.get('api_base', args.api_base)}")
+    # Type checking will complain if health_data is treated as a dict when it could be a string
+    # Let's handle this by checking the type first
+    if isinstance(health_data, dict):
+        status = health_data.get('status', 'unknown')
+        ollama_version = health_data.get('ollama_version', 'unknown')
+        api_base_value = health_data.get('api_base', args.api_base)
+        
+        console.print(f"[bold green]Server is running:[/] {status}")
+        console.print(f"[bold green]Ollama version:[/] {ollama_version}")
+        console.print(f"[bold green]API base:[/] {api_base_value}")
+    else:
+        console.print(f"[bold green]Server is running[/]")
+        console.print(f"[bold green]API base:[/] {args.api_base}")
     
     # Get available models
-    available_models = [model['id'] for model in models_data.get('data', [])]
-    console.print(f"[bold green]Available models:[/] {', '.join(available_models)}")
-    
-    # Validate requested models
-    invalid_models = [model for model in args.models if model not in available_models]
-    if invalid_models:
-        console.print(f"[bold red]Warning: The following models are not available: {', '.join(invalid_models)}[/]")
-        console.print("[yellow]Proceeding with available models only.[/]")
-        args.models = [model for model in args.models if model in available_models]
+    if isinstance(models_data, dict):
+        available_models = [model['id'] for model in models_data.get('data', [])]
+        console.print(f"[bold green]Available models:[/] {', '.join(available_models)}")
+        
+        # Validate requested models
+        invalid_models = [model for model in args.models if model not in available_models]
+        if invalid_models:
+            console.print(f"[bold red]Warning: The following models are not available: {', '.join(invalid_models)}[/]")
+            console.print("[yellow]Proceeding with available models only.[/]")
+            args.models = [model for model in args.models if model in available_models]
+    else:
+        console.print("[yellow]Could not retrieve available models list. Proceeding with requested models.[/]")
+        available_models = []
     
     if not args.models:
         console.print("[bold red]Error: No valid models specified for benchmarking.[/]")

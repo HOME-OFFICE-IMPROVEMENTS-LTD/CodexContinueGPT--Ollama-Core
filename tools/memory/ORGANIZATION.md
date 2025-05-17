@@ -22,7 +22,7 @@ The memory management system for DB-GPT is now organized as follows:
 ## Utilities (tools/memory/)
 
 - `memory-tools-manager.sh` - Unified interface for all memory tools
-- `enhanced-cleanup.sh` - Advanced tool for finding and organizing duplicate files
+- `enhanced-cleanup.sh` - Advanced tool for finding and organizing duplicate files, temp files, and shell training files
 - `cleanup-ollama.sh` - Manages Ollama processes and frees memory
 - `cleanup-temp-files.sh` - Cleans up temporary and backup files (symlinked to cleanup_temp_files.sh)
 - `cleanup_temp_files.sh` - Alternate name for cleanup-temp-files.sh

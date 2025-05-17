@@ -20,36 +20,6 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
-    import uvicorn
-    port = int(os.environ.get("PORT", "8000"))
-    host = os.environ.get("HOST", "0.0.0.0")
-    
-    # Verify Ollama is running before starting
-    try:
-        response = requests.get(f"{OLLAMA_API_BASE}/api/version", timeout=5)
-        if response.status_code == 200:
-            ollama_version = response.json().get("version", "unknown")
-            logger.info(f"✅ Connected to Ollama version {ollama_version} at {OLLAMA_API_BASE}")
-        else:
-            logger.warning(f"⚠️ Ollama is not responding correctly at {OLLAMA_API_BASE}")
-            logger.warning("  Server will start, but API calls may fail")
-    except Exception as e:
-        logger.warning(f"⚠️ Could not connect to Ollama at {OLLAMA_API_BASE}: {str(e)}")
-        logger.warning("  Server will start, but API calls may fail")
-        logger.warning("  Make sure Ollama is running with: ollama serve")
-
-    # Log server startup with info header
-    logger.info(f"┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    logger.info(f"┃ 🚀 Starting MCP Ollama Server v1.0.0")
-    logger.info(f"┃ 📡 API available at http://{host}:{port}/v1")
-    logger.info(f"┃ 📚 Default model: {DEFAULT_MODEL}")
-    logger.info(f"┃ 📘 Documentation: http://{host}:{port}/docs")
-    logger.info(f"┃ 🏥 Health check: http://{host}:{port}/v1/health")
-    logger.info(f"┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    
-    # Run the server
-    uvicorn.run(app, host=host, port=port)essage)s",
-)
 logger = logging.getLogger("mcp-ollama")
 
 # Constants
@@ -593,5 +563,30 @@ async def create_embeddings(request: EmbeddingRequest):
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", "8000"))
-    host = os.environ.get("HOST", "0.0.0")
+    host = os.environ.get("HOST", "0.0.0.0")
+    
+    # Verify Ollama is running before starting
+    try:
+        response = requests.get(f"{OLLAMA_API_BASE}/api/version", timeout=5)
+        if response.status_code == 200:
+            ollama_version = response.json().get("version", "unknown")
+            logger.info(f"✅ Connected to Ollama version {ollama_version} at {OLLAMA_API_BASE}")
+        else:
+            logger.warning(f"⚠️ Ollama is not responding correctly at {OLLAMA_API_BASE}")
+            logger.warning("  Server will start, but API calls may fail")
+    except Exception as e:
+        logger.warning(f"⚠️ Could not connect to Ollama at {OLLAMA_API_BASE}: {str(e)}")
+        logger.warning("  Server will start, but API calls may fail")
+        logger.warning("  Make sure Ollama is running with: ollama serve")
+
+    # Log server startup with info header
+    logger.info(f"┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    logger.info(f"┃ 🚀 Starting MCP Ollama Server v1.0.0")
+    logger.info(f"┃ 📡 API available at http://{host}:{port}/v1")
+    logger.info(f"┃ 📚 Default model: {DEFAULT_MODEL}")
+    logger.info(f"┃ 📘 Documentation: http://{host}:{port}/docs")
+    logger.info(f"┃ 🏥 Health check: http://{host}:{port}/v1/health")
+    logger.info(f"┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    
+    # Run the server
     uvicorn.run(app, host=host, port=port)
