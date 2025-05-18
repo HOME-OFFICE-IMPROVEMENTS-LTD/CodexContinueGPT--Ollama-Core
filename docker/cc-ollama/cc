@@ -1,0 +1,10 @@
+#!/bin/bash
+# Simplified entry point for CodexContinueGPT (CCGpt)
+# Just type 'cc' to interact with your AI assistant
+
+# Path to the main CCGpt script - works in both host and container
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CCGPT_SCRIPT="$SCRIPT_DIR/ccgpt.sh"
+
+# Simply pass all arguments to the main script
+bash "$CCGPT_SCRIPT" "$@"

@@ -1,0 +1,114 @@
+# Dockerfile for DB-GPT Shell Agent with Ollama
+FROM ollama/ollama:0.1.32
+
+# Set working directory
+WORKDIR /app
+
+# Install necessary tools
+RUN apt-get update && \
+    apt-get install -y \
+    curl \
+    wget \
+    vim \
+    nano \
+    git \
+    jq \
+    python3 \
+    python3-pip \
+    bash-completion \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create directories for persistence
+RUN mkdir -p /root/.ollama
+RUN mkdir -p /app/agent
+
+# Copy required files
+COPY tools/memory/models/shell-agent.Modelfile /app/agent/shell-agent.Modelfile
+COPY build-shell-agent.sh /app/agent/
+COPY run-shell-agent.sh /app/agent/
+COPY .aliases /app/agent/
+COPY ollama-commands.sh /app/agent/
+
+# Copy fixed Docker shell agent script
+COPY docker/cc-ollama/docker-run-shell-agent-fixed.sh /app/agent/
+COPY docker/cc-ollama/test-shell-agent-fixed.sh /app/agent/
+COPY docker/cc-ollama/direct-shell-agent.sh /app/agent/
+COPY docker/cc-ollama/test-direct-shell-agent.sh /app/agent/
+
+# Make scripts executable
+RUN chmod +x /app/agent/*.sh
+
+# Create a custom wrapper for build-shell-agent.sh
+RUN echo '#!/bin/bash' > /app/agent/docker-build-shell-agent.sh && \
+    echo 'export PROJECT_ROOT="/app/agent"' >> /app/agent/docker-build-shell-agent.sh && \
+    echo 'export MODELFILE="/app/agent/shell-agent.Modelfile"' >> /app/agent/docker-build-shell-agent.sh && \
+    echo 'export MODEL_NAME="codex-shell-agent"' >> /app/agent/docker-build-shell-agent.sh && \
+    echo 'cd /app/agent' >> /app/agent/docker-build-shell-agent.sh && \
+    echo 'echo "Building shell agent with custom configuration..."' >> /app/agent/docker-build-shell-agent.sh && \
+    echo 'echo "Using Modelfile: $MODELFILE"' >> /app/agent/docker-build-shell-agent.sh && \
+    echo 'echo "Model name: $MODEL_NAME"' >> /app/agent/docker-build-shell-agent.sh && \
+    echo 'ollama create $MODEL_NAME -f "$MODELFILE"' >> /app/agent/docker-build-shell-agent.sh && \
+    chmod +x /app/agent/docker-build-shell-agent.sh
+
+# Create a custom wrapper for run-shell-agent.sh
+RUN echo '#!/bin/bash' > /app/agent/docker-run-shell-agent.sh && \
+    echo 'export PROJECT_ROOT="/app/agent"' >> /app/agent/docker-run-shell-agent.sh && \
+    echo 'export MODEL_NAME="codex-shell-agent"' >> /app/agent/docker-run-shell-agent.sh && \
+    echo 'if ! ollama list | grep -q "$MODEL_NAME"; then' >> /app/agent/docker-run-shell-agent.sh && \
+    echo '  echo "Error: Custom model $MODEL_NAME not found"' >> /app/agent/docker-run-shell-agent.sh && \
+    echo '  echo "Building model now..."' >> /app/agent/docker-run-shell-agent.sh && \
+    echo '  /app/agent/docker-build-shell-agent.sh' >> /app/agent/docker-run-shell-agent.sh && \
+    echo 'fi' >> /app/agent/docker-run-shell-agent.sh && \
+    echo 'cd /app/agent' >> /app/agent/docker-run-shell-agent.sh && \
+    echo './run-shell-agent.sh "$@"' >> /app/agent/docker-run-shell-agent.sh && \
+    chmod +x /app/agent/docker-run-shell-agent.sh
+
+# Set up shell agent initialization
+RUN echo '#!/bin/bash' > /app/agent/entrypoint.sh && \
+    echo 'echo "Starting Ollama service..."' >> /app/agent/entrypoint.sh && \
+    echo 'ollama serve &' >> /app/agent/entrypoint.sh && \
+    echo 'sleep 5' >> /app/agent/entrypoint.sh && \
+    echo 'echo "Building shell agent model..."' >> /app/agent/entrypoint.sh && \
+    echo 'echo "Running docker-build-shell-agent.sh"' >> /app/agent/entrypoint.sh && \
+    echo '/app/agent/docker-build-shell-agent.sh' >> /app/agent/entrypoint.sh && \
+    echo 'echo "Shell agent is ready!"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "Run the shell agent with one of these commands:"' >> /app/agent/entrypoint.sh && \
+    echo 'echo ""' >> /app/agent/entrypoint.sh && \
+    echo 'echo "RECOMMENDED METHOD (works without custom model):"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "  - direct-shell-agent                  # Direct chat mode"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "  - direct-shell-agent --audit <file>   # Direct code audit mode"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "  - direct-shell-agent --tasks          # Direct task management"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "  - direct-shell-agent --model llama3   # Use a different Ollama model"' >> /app/agent/entrypoint.sh && \
+    echo 'echo ""' >> /app/agent/entrypoint.sh && \
+    echo 'echo "ALTERNATIVE METHOD (requires custom model):"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "  - run-shell-agent                      # Chat mode"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "  - audit-code <file>                    # Code audit mode"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "  - manage-tasks                         # Task management"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "  - run-shell-agent --history            # View history"' >> /app/agent/entrypoint.sh && \
+    echo 'echo "  - build-shell-agent                    # Rebuild the model"' >> /app/agent/entrypoint.sh && \
+    echo 'echo ""' >> /app/agent/entrypoint.sh && \
+    echo 'echo "Example: direct-shell-agent --audit /app/project/tools/ollama/mcp_ollama_server.py"' >> /app/agent/entrypoint.sh && \
+    echo 'echo ""' >> /app/agent/entrypoint.sh && \
+    echo 'echo "To test direct functionality: ./test-direct-shell-agent.sh"' >> /app/agent/entrypoint.sh && \
+    echo 'exec /bin/bash' >> /app/agent/entrypoint.sh && \
+    chmod +x /app/agent/entrypoint.sh
+
+# Add aliases to bash profile
+RUN echo 'source /app/agent/.aliases' >> /root/.bashrc && \
+    echo 'export PATH="/app/agent:$PATH"' >> /root/.bashrc && \
+    echo 'alias run-shell-agent="/app/agent/docker-run-shell-agent-fixed.sh"' >> /root/.bashrc && \
+    echo 'alias build-shell-agent="/app/agent/docker-build-shell-agent.sh"' >> /root/.bashrc && \
+    echo 'alias docker-run-shell-agent="/app/agent/docker-run-shell-agent-fixed.sh"' >> /root/.bashrc && \
+    echo 'alias audit-code="/app/agent/docker-run-shell-agent-fixed.sh --audit"' >> /root/.bashrc && \
+    echo 'alias manage-tasks="/app/agent/docker-run-shell-agent-fixed.sh --tasks"' >> /root/.bashrc && \
+    echo 'alias shell-agent="ollama run codex-shell-agent"' >> /root/.bashrc && \
+    echo 'alias direct-shell-agent="/app/agent/direct-shell-agent.sh"' >> /root/.bashrc && \
+    echo 'alias direct-audit="/app/agent/direct-shell-agent.sh --audit"' >> /root/.bashrc && \
+    echo 'alias direct-tasks="/app/agent/direct-shell-agent.sh --tasks"' >> /root/.bashrc && \
+    echo 'cd /app/agent' >> /root/.bashrc
+
+# Set the entrypoint
+ENTRYPOINT ["/app/agent/entrypoint.sh"]
+
+# Keep container running
+CMD ["bash"]

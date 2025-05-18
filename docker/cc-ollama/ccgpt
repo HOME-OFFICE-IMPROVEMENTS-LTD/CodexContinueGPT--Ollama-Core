@@ -1,0 +1,10 @@
+#!/bin/bash
+# Simplified entry point for CodexContinue-GPT
+# Just type 'ccgpt' to interact with your AI assistant
+
+# Path to the main CodexContinue-GPT script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CCGPT_SCRIPT="$SCRIPT_DIR/direct-shell-agent.sh"
+
+# Simply pass all arguments to the main script
+bash "$CCGPT_SCRIPT" "$@"
