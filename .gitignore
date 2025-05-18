@@ -222,3 +222,12 @@ analyze_untracked.sh
 # Alternative versions and test files
 integrated-memory-manager.sh
 test-model.Modelfile
+
+# Ignore duplicated files in root directory
+/*.Modelfile
+/cleanup-ollama.sh
+/cleanup_repository.sh
+/direct_cleanup.sh
+/test-shell-agent-docker.sh
+/verify-ollama.sh
+
