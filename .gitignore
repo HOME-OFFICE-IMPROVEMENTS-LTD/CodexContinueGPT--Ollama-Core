@@ -41,6 +41,9 @@ temp-*
 /test-shell-agent-docker.sh
 /verify-ollama.sh
 
+# Original model backups
+tools/memory/models/originals/
+
 var/
 wheels/
 /models/
