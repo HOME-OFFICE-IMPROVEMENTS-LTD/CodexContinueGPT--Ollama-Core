@@ -12,7 +12,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOCKER_COMPOSE_FILE="$PROJECT_ROOT/docker/oi-ollama/docker-compose.shell-agent.yml"
+DOCKER_COMPOSE_FILE="$PROJECT_ROOT/docker/cc-ollama/docker-compose.shell-agent.yml"
 
 echo -e "${CYAN}====================================${NC}"
 echo -e "${CYAN}   DB-GPT Shell Agent Launcher      ${NC}"

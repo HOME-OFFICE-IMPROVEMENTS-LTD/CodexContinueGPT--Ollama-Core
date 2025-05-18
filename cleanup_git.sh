@@ -27,9 +27,9 @@ git add \
   docs_manager.sh \
   docker-compose-ollama.yml \
   docker-compose.deepseek.yml \
-  docker/oi-ollama/Dockerfile \
-  docker/oi-ollama/Dockerfile.shell-agent \
-  docker/oi-ollama/docker-compose.shell-agent.yml \
+  docker/cc-ollama/Dockerfile \
+  docker/cc-ollama/Dockerfile.shell-agent \
+  docker/cc-ollama/docker-compose.shell-agent.yml \
   docs/ollama_shell_guidance.md \
   docs/wiki/AGENT_MEMORY_GUIDE.md \
   docs/wiki/ALIASES.md \
