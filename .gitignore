@@ -30,6 +30,17 @@ backup_cleanup/
 temp-*
 *.tmp
 
+# Modelfiles in root directory (duplicates of those in tools/memory/models)
+/*.Modelfile
+/lite-test.Modelfile
+/minimal-shell-agent.Modelfile
+/minimal-test.Modelfile
+/shell-agent.Modelfile
+/smart-shell-agent-lite.Modelfile
+/smart-shell-agent.Modelfile
+/test-shell-agent-docker.sh
+/verify-ollama.sh
+
 var/
 wheels/
 /models/
@@ -43,6 +54,11 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Temporary organizational files
+/DUPLICATE_FILES_REPORT.md
+/FILE_ORGANIZATION_PLAN.md
+/direct_cleanup.sh
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
